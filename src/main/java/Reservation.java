@@ -24,9 +24,8 @@ public class Reservation {
         } else if (code.equals("STAY4_GET1")) {
             return (checkOut - checkIn) >= 5; // Valid if reservation is 5 days or more
         } else if (code.equals("PAYDAY")) {
-            return (checkIn == 15 && checkOut > 15) || (checkIn < 30 && checkOut == 30);
-            // Valid if check-in is 15 and check-out is after 15 OR check-in is before 30
-            // and check-out is 30
+            return (checkIn <= 15 && checkOut > 15) || (checkIn <= 30 && checkOut > 30);
+            // Valid if check-in spans 15 or 30 but is NOT check out.
         } else {
             return false; // Invalid code
         }
@@ -35,7 +34,7 @@ public class Reservation {
     public double calculateDiscountedPrice(String code) {
         double discountedPrice = this.getTotalCost(); // Original price
         if (isValidDiscountCode(code)) {
-            if (code.equals("_WORK_HERE")) {
+            if (code.equals("I_WORK_HERE")) {
                 discountedPrice *= 0.9; // 10% discount
             } else if (code.equals("STAY4_GET1")) {
                 discountedPrice -= this.getBasePrice(); // First day free

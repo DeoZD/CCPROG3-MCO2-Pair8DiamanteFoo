@@ -36,7 +36,7 @@ public class HotelManagementController {
 
             String priceInput = view.getUserInput("Enter Base Price (default 1299.00):");
             double basePrice;
-            
+
             if (priceInput.isEmpty()) {
                 view.showMessage("No entered price. Using default price 1299.00.");
                 basePrice = 1299.00;
@@ -52,13 +52,6 @@ public class HotelManagementController {
                     basePrice = 1299.00;
                 }
             }
-
-            
-
-            // if (basePrice < 100 && basePrice != 1299.00) {
-            //     view.showMessage("Base Price should be >= 100");
-            //     return;
-            // }
 
             hotels.add(new Hotel(name, basePrice));
             view.showMessage("Hotel successfully added.");
@@ -78,8 +71,8 @@ public class HotelManagementController {
             if (hotels.isEmpty()) {
                 view.showMessage("No hotels to remove.");
                 return;
-            } 
-            
+            }
+
             String name = view.getUserInput("Enter hotel name to remove:");
             if (name == null) {
                 view.showMessage("Operation cancelled.");
@@ -144,6 +137,11 @@ public class HotelManagementController {
     class SimulateBookingListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            if (hotels.isEmpty()) {
+                view.showMessage("No hotels to Book.");
+                return;
+            }
+
             // Display hotel details to the user
             displayHotelOptions();
             // Get hotel name from the user
@@ -179,12 +177,25 @@ public class HotelManagementController {
                             Reservation reservation = new Reservation(guestName, checkIn, checkOut, roomName,
                                     hotel.getBasePrice(), hotel);
                             double totalPrice = reservation.getTotalCost();
-                            if (!discountCode.isEmpty() && reservation.isValidDiscountCode(discountCode)) {
-                                totalPrice = reservation.calculateDiscountedPrice(discountCode);
+                            if (!discountCode.isEmpty()) {
+                                if (reservation.isValidDiscountCode(discountCode)) {
+                                    totalPrice = reservation.calculateDiscountedPrice(discountCode);
+                                } else {
+                                    if (discountCode.equals("STAY4_GET1"))
+                                        view.showMessage("Discount code unapplicable: Not enough days for discount.");
+                                    if (discountCode.equals("PAYDAY"))
+                                        view.showMessage(
+                                                "Discount code unapplicable: Reservation does not span the 15th or 30th.");
+                                    view.showMessage("no valid Discount applied.");
+                                }
                             }
-                            selectedRoom.addReservation(reservation);
-                            view.showMessage("Booking Successful! Total Price: " + totalPrice);
-                            return;
+                            if (selectedRoom.addReservation(reservation)) {
+                                view.showMessage("Booking Successful!" + "\n" + "Total Price: " + totalPrice);
+                                return; // Exit the loop after successful booking
+                            } else {
+                                view.showMessage("Selected Room " + roomName + " encountered an error.");
+                                return; // Exit the loop if the room is not available
+                            }
                         } else {
                             view.showMessage("Selected Room " + roomName + " is not available for those dates.");
                             return;
@@ -214,7 +225,8 @@ public class HotelManagementController {
     }
 
     private void manageHotel(Hotel hotel) {
-        String[] options = { "Change Name", "Change Base Price", "Add Room", "Remove Room", "Remove Reservation", "Remove Hotel" , "Date Price Modifier"};
+        String[] options = { "Change Name", "Change Base Price", "Add Room", "Remove Room", "Remove Reservation",
+                "Remove Hotel", "Date Price Modifier" };
         int choice = JOptionPane.showOptionDialog(null, "Select an option:", "Manage Hotel",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
@@ -244,13 +256,6 @@ public class HotelManagementController {
                 break;
             case 2: // add room
                 String roomName = view.getUserInput("Enter room name:");
-                double roomBasePrice;
-                try {
-                    roomBasePrice = Double.parseDouble(view.getUserInput("Enter room base price:"));
-                } catch (NumberFormatException ex) {
-                    view.showMessage("Invalid price.");
-                    return;
-                }
                 // Ask for the room type
                 String roomType = view.getUserInput("Enter room type (Standard, Deluxe, Executive):");
                 while (!roomType.equalsIgnoreCase("Standard") && !roomType.equalsIgnoreCase("Deluxe")
@@ -260,11 +265,11 @@ public class HotelManagementController {
                 // Create the appropriate room based on the type
                 Room newRoom;
                 if (roomType.equalsIgnoreCase("Standard")) {
-                    newRoom = new Room(roomName, roomBasePrice);
+                    newRoom = new Room(roomName, hotel.getBasePrice());
                 } else if (roomType.equalsIgnoreCase("Deluxe")) {
-                    newRoom = new RoomDeluxe(roomName, roomBasePrice);
+                    newRoom = new RoomDeluxe(roomName, hotel.getBasePrice());
                 } else {
-                    newRoom = new RoomExecutive(roomName, roomBasePrice);
+                    newRoom = new RoomExecutive(roomName, hotel.getBasePrice());
                 }
                 hotel.addRoom(newRoom);
                 view.showMessage("Room added.");
@@ -302,7 +307,7 @@ public class HotelManagementController {
 
     private void viewHotel(Hotel hotel) {
         String[] options = { "Check Availability on a Specific Date", "View Room Details", "View Reservation Details",
-                "Go Back" };
+                "Troubleshoot", "Go Back" };
         int choice = JOptionPane.showOptionDialog(null, "Select an option:", "View Hotel",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
@@ -318,9 +323,37 @@ public class HotelManagementController {
                 String guestName = view.getUserInput("Enter guest name:");
                 displayReservationDetails(hotel, guestName);
                 break;
+            /*
+            case 3: // troubleshooting reservations
+                String roomNameToTroubleshoot = view.getUserInput("Enter room name to troubleshoot:");
+                displayRoomReservations(hotel.getRoomByName(roomNameToTroubleshoot));
+                break;
+            */
         }
     }
-
+/*
+    // for troubleshooting
+    private void displayRoomReservations(Room room) {
+        if (room != null) {
+            StringBuilder details = new StringBuilder();
+            details.append("Reservations for Room ").append(room.getName()).append(":\n");
+            if (room.getReservations().isEmpty()) {
+                details.append("  No reservations found.\n");
+            } else {
+                for (Reservation reservation : room.getReservations()) {
+                    details.append("  Guest: ").append(reservation.getGuestName()).append("\n");
+                    details.append("  Check-in: ").append(reservation.getCheckIn()).append("\n");
+                    details.append("  Check-out: ").append(reservation.getCheckOut()).append("\n");
+                    details.append("  Total Price: ").append(reservation.getTotalCost()).append("\n\n");
+                }
+            }
+            view.displayInfo(details.toString());
+        } else {
+            view.showMessage("Room not found.");
+        }
+    }
+*/
+    
     private void displayHotelOptions() {
         StringBuilder details = new StringBuilder();
         details.append("Available Hotels:\n");

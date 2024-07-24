@@ -48,8 +48,18 @@ public class Room {
         return true;
     }
 
-    public void addReservation(Reservation reservation) {
-        reservations.add(reservation);
+    public boolean addReservation(Reservation reservation) {
+        if (reservation == null) {
+            return false;
+        }
+
+        if (isAvailable(reservation.getCheckIn(), reservation.getCheckOut())) {
+            reservations.add(reservation);
+            return true; // Reservation successfully added
+        } else {
+            return false; // Reservation could not be added due to unavailability
+        }
+        
     }
 
     public boolean removeReservation(String guestName) {

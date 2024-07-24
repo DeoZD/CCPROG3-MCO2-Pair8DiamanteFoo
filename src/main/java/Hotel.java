@@ -22,6 +22,13 @@ public class Hotel {
             if (i == 10)
                 rooms.add(new RoomExecutive("Room " + i, basePrice));
         }
+        // Initialize datePriceModifiers map
+        this.datePriceModifiers = new HashMap<>();
+        // Set default price rates to 100%
+        for (int date = 1; date <= 30; date++) {
+            datePriceModifiers.put(date, 1.0); // 100%
+        }
+
     }
 
     public String getName() {
