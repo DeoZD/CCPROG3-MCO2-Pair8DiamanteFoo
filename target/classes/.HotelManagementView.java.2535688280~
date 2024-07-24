@@ -1,0 +1,179 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+
+public class HotelManagementView {
+
+    private JFrame frame;
+    private JTextArea displayArea;
+    private JPanel panel;
+    private JLabel hotelNameLabel, roomsCountLabel, earningsLabel;
+    private JLabel availableRoomsLabel, bookedRoomsLabel;
+    private JLabel roomNameLabel, roomPriceLabel;
+    private JTextArea roomAvailabilityTextArea, reservationDetailsTextArea;
+    private JPanel hotelInfoPanel, roomInfoPanel, reservationInfoPanel;
+
+    public HotelManagementView() {
+        initialize();
+    }
+
+    private void initialize() {
+        frame = new JFrame();
+        frame.setTitle("Hotel Management System");
+        frame.setBounds(100, 100, 800, 600);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().setLayout(new BorderLayout());
+
+        displayArea = new JTextArea();
+        displayArea.setEditable(false);
+        frame.getContentPane().add(new JScrollPane(displayArea), BorderLayout.CENTER);
+
+        panel = new JPanel();
+        frame.getContentPane().add(panel, BorderLayout.NORTH);
+
+        JButton btnCreateHotel = new JButton("Create Hotel");
+        panel.add(btnCreateHotel);
+
+        JButton btnRemoveHotel = new JButton("Remove Hotel");
+        panel.add(btnRemoveHotel);
+
+        JButton btnViewHotel = new JButton("View Hotel");
+        panel.add(btnViewHotel);
+
+        JButton btnManageHotel = new JButton("Manage Hotel");
+        panel.add(btnManageHotel);
+
+        JButton btnSimulateBooking = new JButton("Simulate Booking");
+        panel.add(btnSimulateBooking);
+
+        // Create hotel information panel
+        hotelInfoPanel = new JPanel(new GridLayout(3, 2));
+        hotelNameLabel = new JLabel("");
+        roomsCountLabel = new JLabel("");
+        earningsLabel = new JLabel("");
+        hotelInfoPanel.add(new JLabel("Hotel Name:"));
+        hotelInfoPanel.add(hotelNameLabel);
+        hotelInfoPanel.add(new JLabel("Total Rooms:"));
+        hotelInfoPanel.add(roomsCountLabel);
+        hotelInfoPanel.add(new JLabel("Estimated Earnings:"));
+        hotelInfoPanel.add(earningsLabel);
+        frame.getContentPane().add(hotelInfoPanel, BorderLayout.WEST); // Adjust positioning as needed
+        // Create room information panel
+        roomInfoPanel = new JPanel(new GridLayout(3, 2));
+        roomNameLabel = new JLabel("");
+        roomPriceLabel = new JLabel("");
+        roomAvailabilityTextArea = new JTextArea();
+        roomAvailabilityTextArea.setEditable(false);
+        roomInfoPanel.add(new JLabel("Room Name:"));
+        roomInfoPanel.add(roomNameLabel);
+        roomInfoPanel.add(new JLabel("Price per Night:"));
+        roomInfoPanel.add(roomPriceLabel);
+        roomInfoPanel.add(new JLabel("Availability:"));
+        roomInfoPanel.add(new JScrollPane(roomAvailabilityTextArea));
+        frame.getContentPane().add(roomInfoPanel, BorderLayout.CENTER); // Adjust positioning as needed
+        // Create reservation information panel
+        reservationInfoPanel = new JPanel(new GridLayout(6, 2));
+        reservationDetailsTextArea = new JTextArea();
+        reservationDetailsTextArea.setEditable(false);
+        reservationInfoPanel.add(new JLabel("Guest Name:"));
+        reservationInfoPanel.add(new JLabel(""));
+        reservationInfoPanel.add(new JLabel("Room Name:"));
+        reservationInfoPanel.add(new JLabel(""));
+        reservationInfoPanel.add(new JLabel("Check-in:"));
+        reservationInfoPanel.add(new JLabel(""));
+        reservationInfoPanel.add(new JLabel("Check-out:"));
+        reservationInfoPanel.add(new JLabel(""));
+        reservationInfoPanel.add(new JLabel("Total Price:"));
+        reservationInfoPanel.add(new JLabel(""));
+        reservationInfoPanel.add(new JLabel("Price per Night:"));
+        reservationInfoPanel.add(new JLabel(""));
+        reservationInfoPanel.add(new JScrollPane(reservationDetailsTextArea));
+        frame.getContentPane().add(reservationInfoPanel, BorderLayout.EAST); // Adjust positioning as needed
+
+    }
+
+    public JComboBox<String> getHotelDropdown() {
+        return hotelDropdown;
+    }
+
+    public void setCreateHotelButtonListener(ActionListener actionListener) {
+        JButton btnCreateHotel = (JButton) panel.getComponent(0);
+        btnCreateHotel.addActionListener(actionListener);
+    }
+
+    public void setRemoveHotelButtonListener(ActionListener actionListener) {
+        JButton btnRemoveHotel = (JButton) panel.getComponent(1);
+        btnRemoveHotel.addActionListener(actionListener);
+    }
+
+    public void setViewHotelButtonListener(ActionListener actionListener) {
+        JButton btnViewHotel = (JButton) panel.getComponent(2);
+        btnViewHotel.addActionListener(actionListener);
+    }
+
+    public void setManageHotelButtonListener(ActionListener actionListener) {
+        JButton btnManageHotel = (JButton) panel.getComponent(3);
+        btnManageHotel.addActionListener(actionListener);
+    }
+
+    public void setSimulateBookingButtonListener(ActionListener actionListener) {
+        JButton btnSimulateBooking = (JButton) panel.getComponent(4);
+        btnSimulateBooking.addActionListener(actionListener);
+    }
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(frame, message);
+    }
+
+    public void displayInfo(String message) {
+        displayArea.append(message + "\n");
+    }
+
+    public String getUserInput(String message) {
+        return JOptionPane.showInputDialog(frame, message);
+    }
+
+    public void displayHotelDetails(String details) {
+        displayArea.setText(details);
+    }
+
+    public void setHotelNameLabel(String name) {
+        hotelNameLabel.setText(name);
+    }
+
+    public void setRoomsCountLabel(String count) {
+        roomsCountLabel.setText(count);
+    }
+
+    public void setEarningsLabel(String earnings) {
+        earningsLabel.setText(earnings);
+    }
+
+    public void setAvailableRoomsLabel(String count) {
+        availableRoomsLabel.setText(count);
+    }
+
+    public void setBookedRoomsLabel(String count) {
+        bookedRoomsLabel.setText(count);
+    }
+
+    public void setRoomNameLabel(String name) {
+        roomNameLabel.setText(name);
+    }
+
+    public void setRoomPriceLabel(String price) {
+        roomPriceLabel.setText(price);
+    }
+
+    public void setRoomAvailabilityTextArea(String text) {
+        roomAvailabilityTextArea.setText(text);
+    }
+
+    public void setReservationDetailsTextArea(String text) {
+        reservationDetailsTextArea.setText(text);
+    }
+
+    public void showFrame() {
+        frame.setVisible(true);
+    }
+}
