@@ -1,12 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class HotelManagementView {
 
     private JFrame frame;
     private JTextArea displayArea;
     private JPanel panel;
+    private JComboBox<String> hotelOptionsComboBox; // added for the option comboBox GUI
+
 
     public HotelManagementView() {
         frame = new JFrame();
@@ -77,6 +81,34 @@ public class HotelManagementView {
 
     public void displayHotelDetails(String details) {
         displayArea.setText(details);
+    }
+
+    
+
+    public void displayHotelOptions(List<Hotel> hotels) { // Pass the list of hotels
+        String[] hotelNames = new String[hotels.size()]; // Create an array to hold hotel names
+        for (int i = 0; i < hotels.size(); i++) { // Loop through the hotels
+            hotelNames[i] = hotels.get(i).getName(); // Add each hotel name to the array
+        }
+        hotelOptionsComboBox = new JComboBox<>(hotelNames); // Create a JComboBox with the hotel names
+        // ... (Add hotelOptionsComboBox to the GUI) 
+        // Example: 
+        // add(hotelOptionsComboBox); // Add the combobox to your layout 
+        // hotelOptionsComboBox.setBounds(100, 100, 200, 25); // Set bounds if needed
+
+        hotelOptionsComboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (e.getSource()==hotelOptionsComboBox) {
+                    String selectedHotelName = (String) hotelOptionsComboBox.getSelectedItem();
+                    // Now you can use selectedHotelName in your controller 
+                }
+            }
+        });
+    }
+
+    public String getSelectedHotelOption() {
+        return (String) hotelOptionsComboBox.getSelectedItem(); // Get the selected item as a String
     }
 
     public void showFrame() {

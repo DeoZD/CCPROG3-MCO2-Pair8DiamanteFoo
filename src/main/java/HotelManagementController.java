@@ -145,11 +145,11 @@ public class HotelManagementController {
             // Display hotel details to the user
             displayHotelOptions();
             // Get hotel name from the user
-            String hotelName = view.getUserInput("Enter hotel name:");
+            String hotelName = view.getUserInput("Enter Hotel Name:");
             // Display rooms of the selected hotel
             displayRooms(hotelName);
             // Get room name from the user
-            String roomName = view.getUserInput("Enter room name:");
+            String roomName = view.getUserInput("Enter Room Name:");
             // Find the hotel and room
             for (Hotel hotel : hotels) {
                 if (hotel.getName().equals(hotelName)) {
@@ -255,24 +255,27 @@ public class HotelManagementController {
                 }
                 break;
             case 2: // add room
-                String roomName = view.getUserInput("Enter room name:");
-                // Ask for the room type
-                String roomType = view.getUserInput("Enter room type (Standard, Deluxe, Executive):");
-                while (!roomType.equalsIgnoreCase("Standard") && !roomType.equalsIgnoreCase("Deluxe")
-                        && !roomType.equalsIgnoreCase("Executive")) {
-                    roomType = view.getUserInput("Invalid room type. Enter Standard, Deluxe, or Executive:");
-                }
-                // Create the appropriate room based on the type
-                Room newRoom;
-                if (roomType.equalsIgnoreCase("Standard")) {
-                    newRoom = new Room(roomName, hotel.getBasePrice());
-                } else if (roomType.equalsIgnoreCase("Deluxe")) {
-                    newRoom = new RoomDeluxe(roomName, hotel.getBasePrice());
+                if (hotel.getTotalRooms() > 50) {
+                    view.showMessage("Maximum number of rooms reached.");
                 } else {
-                    newRoom = new RoomExecutive(roomName, hotel.getBasePrice());
+                    String roomName = view.getUserInput("Enter room name:");
+                    // Ask for the room type
+                    String roomType = view.getUserInput("Enter room type (Standard, Deluxe, Executive):");
+                    while (!roomType.equalsIgnoreCase("Standard") && !roomType.equalsIgnoreCase("Deluxe")
+                            && !roomType.equalsIgnoreCase("Executive")) {
+                        roomType = view.getUserInput("Invalid room type. Enter Standard, Deluxe, or Executive:");
+                    }                        // Create the appropriate room based on the type
+                   Room newRoom;
+                    if (roomType.equalsIgnoreCase("Standard")) {
+                        newRoom = new Room(roomName, hotel.getBasePrice());
+                    } else if (roomType.equalsIgnoreCase("Deluxe")) {
+                        newRoom = new RoomDeluxe(roomName, hotel.getBasePrice());
+                    } else {
+                        newRoom = new RoomExecutive(roomName, hotel.getBasePrice());
+                    }
+                    hotel.addRoom(newRoom);
+                    view.showMessage("Room added.");
                 }
-                hotel.addRoom(newRoom);
-                view.showMessage("Room added.");
                 break;
             case 3:
                 String roomNameToRemove = view.getUserInput("Enter room name to remove:");
@@ -365,6 +368,11 @@ public class HotelManagementController {
             }
         }
         view.displayHotelDetails(details.toString());
+    }
+
+    private void handleRoomSelection() {
+        String selectedRoomName = view.getSelectedHotelOption();
+        // ... (Use the selectedRoomName to access the corresponding room object)
     }
 
     private void displayRooms(String hotelName) {
