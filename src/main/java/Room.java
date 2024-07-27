@@ -3,13 +3,13 @@ import java.util.List;
 
 public class Room {
     private String name;
-    private double basePrice;
+    private double price;
     private List<Reservation> reservations;
     private String roomType;
 
-    public Room(String name, double basePrice) {
+    public Room(String name, double price) {
         this.name = name;
-        this.basePrice = basePrice;
+        this.price = price;
         this.reservations = new ArrayList<>();
         this.roomType = "Standard";
     }
@@ -18,16 +18,16 @@ public class Room {
         return name;
     }
 
-    public double getBasePrice() {
-        return basePrice;
+    public double getPrice() {
+        return price;
     }
 
     public List<Reservation> getReservations() {
         return reservations;
     }
 
-    public void setBasePrice(double basePrice) {
-        this.basePrice = basePrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getroomType() {
@@ -41,7 +41,7 @@ public class Room {
     public boolean isAvailable(int checkIn, int checkOut) {
         for (Reservation reservation : reservations) {
             if ((checkIn >= reservation.getCheckIn() && checkIn < reservation.getCheckOut()) ||
-                    (checkOut > reservation.getCheckIn() && checkOut <= reservation.getCheckOut())) {
+                (checkOut > reservation.getCheckIn() && checkOut <= reservation.getCheckOut())) {
                 return false;
             }
         }

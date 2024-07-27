@@ -247,7 +247,7 @@ public class HotelManagementController {
                 if (hotel.isPriceUpdateable()) {
                     hotel.setBasePrice(newBasePrice);
                     for (Room room : hotel.getRooms()) {
-                        room.setBasePrice(newBasePrice);
+                        room.setPrice(newBasePrice);
                     }
                     view.showMessage("Base price updated.");
                 } else {
@@ -411,7 +411,7 @@ public class HotelManagementController {
         if (room != null) {
             StringBuilder details = new StringBuilder();
             details.append("Room Name: ").append(room.getName()).append("\n");
-            details.append("Base Price: ").append(room.getBasePrice()).append("\n");
+            details.append("Base Price: ").append(room.getPrice()).append("\n");
             details.append("Availability: ");
             for (int date = 1; date <= 30; date++) {
                 if (room.isAvailable(date, date + 1)) {
