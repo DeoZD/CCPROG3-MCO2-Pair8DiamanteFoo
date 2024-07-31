@@ -1,3 +1,13 @@
+/**
+ * The Reservation class represents a reservation made by a guest at a hotel.
+ * It contains information about the guest, the room, check-in and check-out
+ * dates,
+ * the base price of the room, and the total cost of the reservation.
+ * 
+ * @author James Foo
+ * @author Zami Diamante
+ * @version 1.0
+ */
 public class Reservation {
     private String guestName;
     private int checkIn;
@@ -6,18 +16,37 @@ public class Reservation {
     private double basePrice;
     private double totalCost;
     private Hotel hotel;
-    // private double discount;
+    private Room selectedRoom;
 
-    public Reservation(String guestName, int checkIn, int checkOut, String roomName, double basePrice, Hotel hotel) {
+    /**
+     * Constructor for creating a new Reservation.
+     *
+     * @param guestName the name of the guest
+     * @param checkIn   the check-in date
+     * @param checkOut  the check-out date
+     * @param roomName  the name of the room
+     * @param hotel     the hotel where the reservation is made
+     * @param room      the selected room
+     */
+    public Reservation(String guestName, int checkIn, int checkOut, String roomName, Hotel hotel,
+            Room room) {
         this.guestName = guestName;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.roomName = roomName;
-        this.basePrice = basePrice;
+        this.selectedRoom = room;
+        this.basePrice = selectedRoom.getPrice();
         this.hotel = hotel;
-        this.totalCost = calculateTotalCost(checkIn, checkOut, basePrice);
+        this.totalCost = calculateTotalCost(checkIn, checkOut, basePrice); // Calculate the total cost of the
+                                                                           // reservation
     }
 
+    /**
+     * Checks if the provided discount code is valid for the reservation.
+     *
+     * @param code the discount code to check
+     * @return true if the discount code is valid, false otherwise
+     */
     public boolean isValidDiscountCode(String code) {
         if (code.equals("_WORK_HERE")) {
             return true; // Always valid
@@ -31,6 +60,12 @@ public class Reservation {
         }
     }
 
+    /**
+     * Calculates the discounted price based on the provided discount code.
+     *
+     * @param code the discount code to apply
+     * @return the discounted price
+     */
     public double calculateDiscountedPrice(String code) {
         double discountedPrice = this.getTotalCost(); // Original price
         if (isValidDiscountCode(code)) {
@@ -45,7 +80,15 @@ public class Reservation {
         return discountedPrice;
     }
 
-    // Calculate total cost considering date price modifiers
+    /**
+     * Calculates the total cost of the reservation considering date price
+     * modifiers.
+     *
+     * @param checkIn   the check-in date
+     * @param checkOut  the check-out date
+     * @param basePrice the base price of the room
+     * @return the total cost of the reservation
+     */
     private double calculateTotalCost(int checkIn, int checkOut, double basePrice) {
         double totalCost = 0;
         for (int date = checkIn; date < checkOut; date++) {
@@ -55,29 +98,57 @@ public class Reservation {
         return totalCost;
     }
 
+    /**
+     * Gets the name of the guest.
+     *
+     * @return the guest's name
+     */
     public String getGuestName() {
         return guestName;
     }
 
+    /**
+     * Gets the check-in date.
+     *
+     * @return the check-in date
+     */
     public int getCheckIn() {
         return checkIn;
     }
 
+    /**
+     * Gets the check-out date.
+     *
+     * @return the check-out date
+     */
     public int getCheckOut() {
         return checkOut;
     }
 
+    /**
+     * Gets the total cost of the reservation.
+     *
+     * @return the total cost
+     */
     public double getTotalCost() {
-        totalCost = (checkOut - checkIn) * basePrice;
         return totalCost;
     }
 
+    /**
+     * Gets the name of the room.
+     *
+     * @return the room name
+     */
     public String getRoomName() {
         return roomName;
     }
 
+    /**
+     * Gets the base price of the room.
+     *
+     * @return the base price
+     */
     public double getBasePrice() {
         return basePrice;
     }
-
 }
